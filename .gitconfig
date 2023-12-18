@@ -1,0 +1,11 @@
+[user]
+	email = jaimielovett@live.co.uk
+	name = Jaimie Lovett
+[alias]
+	d = diff
+	ci = commit
+	ca = commit -a
+	co = checkout
+	llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
+	st = status
+	su = submodule update
