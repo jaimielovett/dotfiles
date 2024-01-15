@@ -108,6 +108,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias config='/usr/bin/git --git-dir=/Users/jaimielovett/.cfg/ --work-tree=/Users/jaimielovett'
 alias vim='nvim'
+alias ta='tmux attach -t'
+alias td='tmux detach'
+alias tn='tmux new -s'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
