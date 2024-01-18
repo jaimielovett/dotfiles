@@ -110,7 +110,8 @@ alias config='/usr/bin/git --git-dir=/Users/jaimielovett/.cfg/ --work-tree=/User
 alias vim='nvim'
 alias ta='tmux attach -t'
 alias tn='tmux new -s'
-
+alias nrf='npm run format'
+alias nrc='npm run lint && npm run check'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
