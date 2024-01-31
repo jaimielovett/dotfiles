@@ -110,7 +110,6 @@ alias config='/usr/bin/git --git-dir=/Users/jaimielovett/.cfg/ --work-tree=/User
 alias vim='nvim'
 alias ta='tmux attach -t'
 alias tn='tmux new -s'
-alias td='tmux detach'
 alias nrc='npm run dev'
 alias nrf='npm run format'
 alias nrc='npm run lint && npm run check'
