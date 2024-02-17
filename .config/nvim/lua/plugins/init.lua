@@ -143,9 +143,16 @@ local default_plugins = {
       -- autopairing of (){}[] etc
       {
         "windwp/nvim-autopairs",
+        dependencies = "hrsh7th/nvim-cmp",
         opts = {
           fast_wrap = {},
           disable_filetype = { "TelescopePrompt", "vim" },
+          check_ts = true,
+          ts_config = {
+            lua = { "string" }, -- don't add pairs in lua string treesitter nodes
+            javascript = { "template_string" }, -- don't add pairs in javscript template_string treesitter nodes
+            java = false, -- don't check treesitter on java
+          },
         },
         config = function(_, opts)
           require("nvim-autopairs").setup(opts)

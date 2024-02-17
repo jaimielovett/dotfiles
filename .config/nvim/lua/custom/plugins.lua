@@ -121,10 +121,5 @@ local plugins = {
     },
     opts = {}
   },
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    opts = {},
-  }
 }
 return plugins
