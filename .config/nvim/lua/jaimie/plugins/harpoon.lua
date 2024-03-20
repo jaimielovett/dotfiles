@@ -6,8 +6,6 @@ return {
   config = function()
     -- set keymaps
     local keymap = vim.keymap -- for conciseness
-    local mark = require("harpoon.mark")
-    local ui = require("harpoon.ui")
 
     keymap.set("n", "<leader>hm", "<cmd>lua require('harpoon.mark').add_file()<cr>")
     keymap.set("n", "<leader>he", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>")
