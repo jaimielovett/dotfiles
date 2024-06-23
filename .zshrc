@@ -115,6 +115,7 @@ alias tn='tmux new -s'
 alias nrd='npm run dev'
 alias nrf='npm run format'
 alias nrc='npm run lint && npm run check'
+alias love='/Applications/love.app/Contents/MacOS/love'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
