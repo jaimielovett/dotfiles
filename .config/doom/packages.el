@@ -48,3 +48,8 @@
 ;; (unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
+
+(package! evil-tutor)
+(package! tldr)
+(package! git-auto-commit-mode)
+(package! catppuccin-theme)
