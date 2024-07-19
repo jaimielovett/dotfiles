@@ -1,2 +1,2 @@
-require("jaimie.core.keymaps")
 require("jaimie.core.options")
+require("jaimie.core.keymaps")
