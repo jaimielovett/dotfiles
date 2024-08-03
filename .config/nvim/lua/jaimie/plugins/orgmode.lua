@@ -7,6 +7,9 @@ return {
 		require("orgmode").setup({
 			org_agenda_files = "~/projects/org/**/*",
 			org_default_notes_file = "~/projects/org/refile.org",
+			org_hide_leading_stars = true,
+			org_todo_keywords = { "TODO", "DOING", "DONE" },
+
 			org_capture_templates = {
 				t = "Task",
 				tt = {
@@ -17,13 +20,13 @@ return {
 				},
 				ts = {
 					description = "Scheduled Task",
-					template = "** TODO %?\n %u\n:SCHEDULED:%^t",
+					template = "** TODO %?\nSCHEDULED: %^t",
 					target = "~/projects/org/todo.org",
 					headline = "One-Off Tasks",
 				},
 				tr = {
 					description = "Recurring Task",
-					template = "* TODO %?\n %u",
+					template = "** TODO %?\n %u",
 					target = "~/projects/org/todo.org",
 					heading = "Recurring",
 				},
