@@ -53,3 +53,4 @@
 (package! tldr)
 (package! git-auto-commit-mode)
 (package! catppuccin-theme)
+(package! hydra)
