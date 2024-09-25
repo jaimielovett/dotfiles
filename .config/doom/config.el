@@ -21,9 +21,9 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)
-      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 24))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 18)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 18)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 24))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -35,7 +35,6 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'catppuccin)
 (setq catppuccin-flavor 'macchiato)
-(catppuccin-reload)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -43,7 +42,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/documents/projects/org")
+(setq org-directory "~/projects/org")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -83,3 +82,31 @@
   (setq gac-automatically-add-new-files-p t))
 
 (add-hook 'org-mode-hook 'set-gac-settings)
+
+;; source: https://nayak.io/posts/golang-development-doom-emacs/
+;; golang formatting set up
+;; use gofumpt
+(after! lsp-mode
+  (setq  lsp-go-use-gofumpt t)
+  )
+;; automatically organize imports
+(add-hook 'go-mode-hook #'lsp-deferred)
+;; Make sure you don't have other goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'go-mode-hook #'yas-minor-mode)
+
+;; enable all analyzers; not done by default
+(after! lsp-mode
+  (setq  lsp-go-analyses '((fieldalignment . t)
+                           (nilness . t)
+                           (shadow . t)
+                           (unusedparams . t)
+                           (unusedwrite . t)
+                           (useany . t)
+                           (unusedvariable . t)))
+  )
