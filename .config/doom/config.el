@@ -76,37 +76,10 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;; Automatically commit and push org files to git
 (defun set-gac-settings ()
   (git-auto-commit-mode 1)
   (setq gac-automatically-push-p t)
   (setq gac-automatically-add-new-files-p t))
 
 (add-hook 'org-mode-hook 'set-gac-settings)
-
-;; source: https://nayak.io/posts/golang-development-doom-emacs/
-;; golang formatting set up
-;; use gofumpt
-(after! lsp-mode
-  (setq  lsp-go-use-gofumpt t)
-  )
-;; automatically organize imports
-(add-hook 'go-mode-hook #'lsp-deferred)
-;; Make sure you don't have other goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'go-mode-hook #'yas-minor-mode)
-
-;; enable all analyzers; not done by default
-(after! lsp-mode
-  (setq  lsp-go-analyses '((fieldalignment . t)
-                           (nilness . t)
-                           (shadow . t)
-                           (unusedparams . t)
-                           (unusedwrite . t)
-                           (useany . t)
-                           (unusedvariable . t)))
-  )
