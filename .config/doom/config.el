@@ -101,9 +101,9 @@
            "** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t")
           ("d" "Recurring Daily Task" entry
            (file+headline "~/projects/org/todo.org" "Daily")
-           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t .+1d")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1d\")")
           ("w" "Recurring Weekly Task" entry
            (file+headline "~/projects/org/todo.org" "Weekly")
-           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t .+1w")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1w\")")
           ))
   )
