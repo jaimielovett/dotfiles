@@ -98,12 +98,25 @@
            "** TODO [#%^{Priority|None|A|B|C}] %?\n")
           ("s" "Scheduled Task" entry
            (file+headline "~/projects/org/todo.org" "One-Off Tasks")
-           "** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t")
+           "** TODO [#%^{Priority|None|A|B|C}] %?\n\t'SCHEDULED: %^t")
           ("d" "Recurring Daily Task" entry
            (file+headline "~/projects/org/todo.org" "Daily")
-           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1d\")")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\n\tSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1d\")")
           ("w" "Recurring Weekly Task" entry
            (file+headline "~/projects/org/todo.org" "Weekly")
-           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1w\")")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\n\tSCHEDULED:%(org-insert-time-stamp (org-read-date nil t) nil nil nil nil \" .+1w\")")
           ))
   )
+
+;; Add the ability to resize windows
+(defhydra doom-window-resize-hydra (:hint nil)
+  ("h" evil-window-decrease-width)
+  ("j" evil-window-increase-height)
+  ("k" evil-window-decrease-height)
+  ("l" evil-window-increase-width)
+
+  ("q" nil))
+
+(map! :leader
+      (:prefix "w"
+       :desc "Hydra resize" :n "SPC" #'doom-window-resize-hydra/body))
