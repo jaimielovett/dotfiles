@@ -3,6 +3,9 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; Maximize Emacs at startup
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
@@ -76,6 +79,9 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;; Automatically save and load workspaces
+(setq +workspaces-auto-save t)
+
 ;; Automatically commit and push org files to git
 (defun set-gac-settings ()
   (git-auto-commit-mode 1)
@@ -83,3 +89,21 @@
   (setq gac-automatically-add-new-files-p t))
 
 (add-hook 'org-mode-hook 'set-gac-settings)
+
+(after! org
+  (setq org-capture-templates
+        '(
+          ("t" "Task" entry
+           (file+headline "~/projects/org/todo.org" "One-Off Tasks")
+           "** TODO [#%^{Priority|None|A|B|C}] %?\n")
+          ("s" "Scheduled Task" entry
+           (file+headline "~/projects/org/todo.org" "One-Off Tasks")
+           "** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t")
+          ("d" "Recurring Daily Task" entry
+           (file+headline "~/projects/org/todo.org" "Daily")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t .+1d")
+          ("w" "Recurring Weekly Task" entry
+           (file+headline "~/projects/org/todo.org" "Weekly")
+           "*** TODO [#%^{Priority|None|A|B|C}] %?\nSCHEDULED: %^t .+1w")
+          ))
+  )
