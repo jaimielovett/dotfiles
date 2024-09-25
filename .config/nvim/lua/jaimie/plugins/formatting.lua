@@ -11,6 +11,7 @@ return {
 				typescript = { "prettier" },
 				javascriptreact = { "prettier" },
 				typescriptreact = { "prettier" },
+				golang = { "golines", "goimport" },
 				svelte = { "prettier" },
 				css = { "prettier" },
 				html = { "prettier" },

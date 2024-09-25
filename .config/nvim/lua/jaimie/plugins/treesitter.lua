@@ -32,6 +32,8 @@ return {
 					"css",
 					"go",
 					"prisma",
+					"make",
+					"dockerfile",
 					"markdown",
 					"markdown_inline",
 					"svelte",

@@ -38,6 +38,7 @@ return {
 				"emmet_ls",
 				"prismals",
 				"pyright",
+				"templ",
 			},
 		})
 
@@ -48,8 +49,10 @@ return {
 				"isort", -- python formatter
 				"black", -- python formatter
 				"pylint", -- python linter
-				"eslint_d", -- js linter
+				"eslint", -- js linter
 				"goimports",
+				"golines",
+				"templ",
 			},
 		})
 	end,

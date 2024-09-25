@@ -7,8 +7,7 @@ return {
 		require("orgmode").setup({
 			org_agenda_files = "~/projects/org/**/*",
 			org_default_notes_file = "~/projects/org/refile.org",
-			org_hide_leading_stars = true,
-			org_todo_keywords = { "TODO", "DOING", "DONE" },
+			org_todo_keywords = { "TODO(t)", "DOING(f)", "DONE(d)" },
 
 			org_capture_templates = {
 				t = "Task",
