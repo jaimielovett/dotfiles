@@ -33,12 +33,10 @@ return {
 				"tailwindcss",
 				"svelte",
 				"lua_ls",
-				"gopls",
 				"graphql",
 				"emmet_ls",
 				"prismals",
 				"pyright",
-				"templ",
 			},
 		})
 
@@ -48,11 +46,8 @@ return {
 				"stylua", -- lua formatter
 				"isort", -- python formatter
 				"black", -- python formatter
-				"pylint", -- python linter
-				"eslint", -- js linter
-				"goimports",
-				"golines",
-				"templ",
+				"pylint",
+				"eslint_d",
 			},
 		})
 	end,
