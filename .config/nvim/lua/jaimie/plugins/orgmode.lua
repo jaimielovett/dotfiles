@@ -37,13 +37,13 @@ return {
 				g = {
 					description = "Game",
 					template = "\n* BACKLOG %^{TITLE}\n:ADDED: [%<%d-%m-%Y>]\n:RATING: %^{RATING}",
-					target = "~/projects/org/games.org",
+					target = "~/projects/org/entertainment/games.org",
 				},
 
 				b = {
 					description = "Books",
 					template = "\n* TBR %^{TITLE}\n:ADDED: [%<%d-%m-%Y>]\n:RATING: %^{RATING}\n:AUTHOR: %^{AUTHOR}\n** Notes\n%^{NOTES}",
-					target = "~/projects/org/books.org",
+					target = "~/projects/org/entertainment/books.org",
 				},
 			},
 		})

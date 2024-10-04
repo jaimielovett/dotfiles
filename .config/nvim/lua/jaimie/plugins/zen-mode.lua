@@ -18,5 +18,5 @@ return {
 		},
 	},
 
-	vim.api.nvim_set_keymap("n", "<leader>z", ":ZenMode<CR>", { noremap = true, silent = true }),
+	vim.api.nvim_set_keymap("n", "<leader>z", ":ZenMode | Pencil<CR>", { noremap = true, silent = true }),
 }
