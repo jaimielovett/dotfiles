@@ -1,5 +1,5 @@
-require("jaimie.core.options")
-require("jaimie.core.keymaps")
+require("core.options")
+require("core.keymaps")
 
 -- Function to handle the async git job response
 local function GitAsyncHandler(_, data, event)
@@ -55,9 +55,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- Auto-command to treat .svx files as markdown
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-  pattern = "*.svx",
-  callback = function()
-    vim.bo.filetype = "markdown"
-  end,
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*.svx",
+	callback = function()
+		vim.bo.filetype = "markdown"
+	end,
 })

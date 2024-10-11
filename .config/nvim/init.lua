@@ -1,2 +1,2 @@
-require("jaimie.core")
-require("jaimie.lazy")
+require("core")
+require("core.lazy")
