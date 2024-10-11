@@ -1,13 +1,45 @@
+local icons = require("utils.icons")
+
+local config = {
+	opts = {
+		preset = "modern",
+		icons = {
+			mappings = false, -- disable icons in keymaps
+			breadcrumb = icons.arrows.DoubleArrowRight, -- symbol used in the command line area that shows your active key combo
+			separator = icons.arrows.SmallArrowRight, -- symbol used between a key and it's label
+			group = icons.ui.Plus, -- symbol prepended to a group
+		},
+		layout = {
+			width = { min = 5, max = 50 }, -- min and max width of the columns
+			spacing = 10, -- spacing between columns
+			align = "center", -- align columns left, center or right
+		},
+		win = {
+			no_overlap = false,
+		},
+		spec = {
+			{ "<leader>b", group = "Buffers" },
+			{ "<leader>f", group = "Files" },
+			{ "<leader>l", group = "LSP" },
+			{ "<leader>m", group = "Misc" },
+			{ "<leader>q", group = "Quickfix" },
+			{ "<leader>R", group = "Replace" },
+			{ "<leader>mS", group = "TreeSJ" },
+			{ "<leader>s", group = "Search" },
+			{ "<leader>t", group = "Toggles" },
+			{ "<leader>w", group = "Window" },
+			{ "<leader>z", group = "Spelling" },
+		},
+	},
+}
+
 return {
-  "folke/which-key.nvim",
-  event = "VeryLazy",
-  init = function()
-    vim.o.timeout = true
-    vim.o.timeoutlen = 500
-  end,
-  opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  },
+	"folke/which-key.nvim",
+	event = "VeryLazy",
+	opts_extend = { "spec" },
+	opts = config.opts,
+	config = function(_, opts)
+		local wk = require("which-key")
+		wk.setup(opts)
+	end,
 }
