@@ -53,3 +53,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	end,
 	group = group,
 })
+
+-- Auto-command to treat .svx files as markdown
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.svx",
+  callback = function()
+    vim.bo.filetype = "markdown"
+  end,
+})
