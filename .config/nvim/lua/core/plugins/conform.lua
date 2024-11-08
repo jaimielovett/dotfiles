@@ -14,6 +14,12 @@ return {
     formatters_by_ft = {
       go = { "goimports", "gofmt" },
       javascript = { "prettier" },
+      typescript = { "prettier" },
+      javascriptreact = { "prettier" },
+      typescriptreact = { "prettier" },
+      svelte = { "prettier" },
+      css = { "prettier" },
+      html = { "prettier" },
       json = { "prettier" },
       lua = { "stylua" },
       markdown = { "prettier" },
