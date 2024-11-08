@@ -11,6 +11,8 @@ export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.emacs.d/bin:$PATH"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -128,7 +130,7 @@ alias work="timer 10s && terminal-notifier -message 'Pomodoro'\
         -title 'Work Timer is up! Take a Break 😊'\
         -appIcon '~/Pictures/pumpkin.png'\
         -sound Crystal"
-        
+
 alias rest="timer 5s && terminal-notifier -message 'Pomodoro'\
         -title 'Break is over! Get back to work 😬'\
         -appIcon '~/Pictures/pumpkin.png'\
