@@ -123,6 +123,7 @@ alias nrf='npm run format'
 alias nrc='npm run lint && npm run check'
 alias brd='bun run dev'
 alias br='bin/rails'
+alias brs='bin/rails server'
 alias em="emacsclient -c"
 alias love="/Applications/love.app/Contents/MacOS/love"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
