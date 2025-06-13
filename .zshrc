@@ -9,8 +9,6 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.emacs.d/bin:$PATH"
-export PATH=$HOME/.elixir-install/installs/otp/27.1.2/erts-15.1.2/bin:$PATH
-export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -125,6 +123,7 @@ alias nrf='npm run format'
 alias nrc='npm run lint && npm run check'
 alias brd='bun run dev'
 alias em="emacsclient -c"
+alias love="/Applications/love.app/Contents/MacOS/love"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -138,3 +137,6 @@ alias rest="timer 5s && terminal-notifier -message 'Pomodoro'\
         -title 'Break is over! Get back to work 😬'\
         -appIcon '~/Pictures/pumpkin.png'\
         -sound Crystal"
+export PATH="/opt/homebrew/bin:$PATH"
+eval "$(~/.local/bin/mise activate)"
+eval "$(~/.local/bin/mise activate)"
