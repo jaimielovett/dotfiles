@@ -107,14 +107,8 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-export GOPATH=/Users/jaimielovett/go
-export GOBIN=$GOPATH/bin
 
-
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias config='/usr/bin/git --git-dir=/Users/jaimielovett/.cfg/ --work-tree=/Users/jaimielovett'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias vim='nvim'
 alias ta='tmux attach -t'
 alias tn='tmux new -s'
@@ -128,17 +122,3 @@ alias em="emacsclient -c"
 alias love="/Applications/love.app/Contents/MacOS/love"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Mac setup for pomo
-alias work="timer 10s && terminal-notifier -message 'Pomodoro'\
-        -title 'Work Timer is up! Take a Break 😊'\
-        -appIcon '~/Pictures/pumpkin.png'\
-        -sound Crystal"
-
-alias rest="timer 5s && terminal-notifier -message 'Pomodoro'\
-        -title 'Break is over! Get back to work 😬'\
-        -appIcon '~/Pictures/pumpkin.png'\
-        -sound Crystal"
-export PATH="/opt/homebrew/bin:$PATH"
-eval "$(~/.local/bin/mise activate)"
-eval "$(~/.local/bin/mise activate)"
