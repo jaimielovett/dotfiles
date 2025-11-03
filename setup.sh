@@ -41,7 +41,9 @@ brew install --cask raycast
 brew install --cask 1password
 brew install --cask notion
 brew install --cask karabiner-elements
-brew install --cask love # LÖVE 2D engine
+brew install --cask love
+brew install --cask font-jetbrains-mono-nerd-font
+brew install lazygit
 
 # --- Avast Antivirus ---
 echo "🛡️  Installing Avast Security..."
@@ -110,14 +112,14 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # Backup any conflicting files
 mkdir -p "$HOME/.config-backup"
-config checkout 2>&1 | egrep "\s+\." | awk '{print $1}' |
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout 2>&1 | egrep "\s+\." | awk '{print $1}' |
   xargs -I{} mv {} "$HOME/.config-backup"/{} || true
 
 # Check out dotfiles
-config checkout
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
 
 # Don’t show untracked files in status
-config config --local status.showUntrackedFiles no
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME config --local status.showUntrackedFiles no
 
 echo "✅ Dotfiles installed successfully!"
 
@@ -127,8 +129,7 @@ if ! grep -q 'alias vim="nvim"' ~/.zshrc 2>/dev/null; then
   echo 'alias vim="nvim"' >>~/.zshrc
 fi
 
-# Reload shell
-source ~/.zshrc || true
+echo 'Remember to run the command "source ~/.zshrc".'
 
 # --- Cleanup ---
 brew cleanup
