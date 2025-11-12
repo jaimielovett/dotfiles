@@ -2,3 +2,5 @@
 font-family = JetBrainsMono Nerd Font
 font-size = 18
 theme = catppuccin-mocha.conf
+background-opacity = 0.8
+background-blur-radius = 60
