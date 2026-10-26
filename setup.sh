@@ -41,9 +41,25 @@ brew install --cask raycast
 brew install --cask 1password
 brew install --cask notion
 brew install --cask karabiner-elements
-brew install --cask love
 brew install --cask font-jetbrains-mono-nerd-font
 brew install lazygit
+
+# --- LÖVE 11.5 (game dev) ---
+# The homebrew cask was disabled (fails Gatekeeper), so install the official
+# notarized build from love2d.org directly into /Applications.
+echo "🎮 Installing LÖVE 11.5..."
+if [ ! -d "/Applications/love.app" ]; then
+  LOVE_TMP=$(mktemp -d)
+  curl -fL -o "$LOVE_TMP/love.zip" \
+    "https://github.com/love2d/love/releases/download/11.5/love-11.5-macos.zip"
+  unzip -q "$LOVE_TMP/love.zip" -d "$LOVE_TMP"
+  mv "$LOVE_TMP/love.app" /Applications/
+  xattr -dr com.apple.quarantine /Applications/love.app 2>/dev/null || true
+  rm -rf "$LOVE_TMP"
+  echo "✅ LÖVE installed: $(/Applications/love.app/Contents/MacOS/love --version)"
+else
+  echo "✅ LÖVE already installed."
+fi
 
 # --- Neovim / LazyVim optional tools ---
 # Enable extra LazyVim features: treesitter CLI, inline images (ImageMagick),
