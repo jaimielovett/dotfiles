@@ -19,3 +19,22 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.keymap.set("t", "<C-d>", "<PageDown>", { buffer = args.buf, desc = "Claude: scroll down" })
   end,
 })
+
+-- Close the LÖVE terminal (opened by <leader>r) when the game exits cleanly.
+-- On a non-zero exit it stays open so the output and error are still readable.
+vim.api.nvim_create_autocmd("TermClose", {
+  group = vim.api.nvim_create_augroup("love_term_close", { clear = true }),
+  callback = function(args)
+    if not vim.api.nvim_buf_get_name(args.buf):find(":love ", 1, true) then
+      return
+    end
+    if vim.v.event.status ~= 0 then
+      return
+    end
+    vim.schedule(function()
+      if vim.api.nvim_buf_is_valid(args.buf) then
+        vim.api.nvim_buf_delete(args.buf, { force = true })
+      end
+    end)
+  end,
+})
