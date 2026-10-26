@@ -32,7 +32,7 @@ defaults write -g com.apple.swipescrolldirection -bool false
 killall Finder SystemUIServer || true
 
 # --- Essential CLI tools ---
-brew install git wget tree zsh tmux neovim ripgrep fd
+brew install git wget tree zsh tmux neovim ripgrep fd node
 
 # --- GUI Apps via Homebrew Cask ---
 brew install --cask ghostty
@@ -44,6 +44,15 @@ brew install --cask karabiner-elements
 brew install --cask love
 brew install --cask font-jetbrains-mono-nerd-font
 brew install lazygit
+
+# --- Neovim / LazyVim optional tools ---
+# Enable extra LazyVim features: treesitter CLI, inline images (ImageMagick),
+# PDF rendering (Ghostscript), LaTeX math (tectonic), structural search (ast-grep),
+# and Mermaid diagram rendering (mermaid-cli, installed via npm).
+echo "🔧 Installing Neovim optional tools..."
+brew install imagemagick ghostscript tectonic ast-grep
+# tree-sitter CLI and mermaid-cli come from npm (brew's tree-sitter is library-only)
+npm install -g tree-sitter-cli @mermaid-js/mermaid-cli
 
 # --- Avast Antivirus ---
 echo "🛡️  Installing Avast Security..."
