@@ -97,3 +97,6 @@
 
 ;; Start with larger text instead of zooming in each session.
 (setq doom-font (font-spec :size 16))
+
+;; Highlight Spawn source files with our local language mode.
+(load! "lisp/spawn-mode")

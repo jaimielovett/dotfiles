@@ -170,7 +170,7 @@ if [ -e "$HOME/.emacs.d" ] || [ -e "$HOME/.emacs" ] || [ -e "$HOME/.emacs.el" ];
   echo "An older Emacs configuration exists in your home folder. Move it aside before continuing."
   exit 1
 fi
-for DOOM_CONFIG_FILE in init.el config.el packages.el; do
+for DOOM_CONFIG_FILE in init.el config.el packages.el lisp/spawn-mode.el; do
   if [ ! -f "$DOOM_CONFIG_DIR/$DOOM_CONFIG_FILE" ]; then
     echo "Missing Doom dotfile: $DOOM_CONFIG_DIR/$DOOM_CONFIG_FILE"
     exit 1
