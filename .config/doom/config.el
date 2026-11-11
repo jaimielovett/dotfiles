@@ -81,13 +81,19 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; Make Homebrew LLVM tools available to formatting and C++ diagnostics.
-(add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
-(setenv "PATH" (concat "/opt/homebrew/opt/llvm/bin:" (getenv "PATH")))
+;; Homebrew lives in different locations on Apple Silicon and Intel Macs.
+(defvar jam-llvm-bin
+  (expand-file-name "opt/llvm/bin"
+                    (if (file-directory-p "/opt/homebrew")
+                        "/opt/homebrew" "/usr/local")))
+(add-to-list 'exec-path jam-llvm-bin)
+(unless (member jam-llvm-bin (split-string (getenv "PATH") path-separator))
+  (setenv "PATH" (concat jam-llvm-bin path-separator (getenv "PATH"))))
 (after! eglot
   (add-to-list 'eglot-server-programs
-               '((c++-mode c-mode c++-ts-mode c-ts-mode)
-                 . ("/opt/homebrew/opt/llvm/bin/clangd" "--background-index" "--clang-tidy"))))
+               `((c++-mode c-mode c++-ts-mode c-ts-mode)
+                 . (,(expand-file-name "clangd" jam-llvm-bin)
+                    "--background-index" "--clang-tidy"))))
 
 ;; Start with larger text instead of zooming in each session.
 (setq doom-font (font-spec :size 16))

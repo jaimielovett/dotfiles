@@ -148,6 +148,54 @@ mkdir -p "$HOME/.config-backup"
 
 echo "✅ Dotfiles installed successfully!"
 
+# --- Doom Emacs ---
+# Restore ~/.config/doom from dotfiles before installing Doom so its selected
+# modules, C++ tooling and font size are used from the first launch.
+echo "Installing Doom Emacs and development tools..."
+brew install coreutils findutils gnu-tar llvm shellcheck multimarkdown
+brew install --cask emacs-app font-symbols-only-nerd-font
+
+DOOM_EMACS_DIR="$HOME/.config/emacs"
+DOOM_CONFIG_DIR="$HOME/.config/doom"
+if [ ! -e "$DOOM_EMACS_DIR" ]; then
+  mkdir -p "$HOME/.config"
+  git clone --depth 1 https://github.com/doomemacs/core "$DOOM_EMACS_DIR"
+elif [ ! -x "$DOOM_EMACS_DIR/bin/doom" ]; then
+  echo "Existing $DOOM_EMACS_DIR is not a Doom installation; leaving it untouched."
+  exit 1
+fi
+
+# Avoid accidentally using a different, older Emacs configuration.
+if [ -e "$HOME/.emacs.d" ] || [ -e "$HOME/.emacs" ] || [ -e "$HOME/.emacs.el" ]; then
+  echo "An older Emacs configuration exists in your home folder. Move it aside before continuing."
+  exit 1
+fi
+for DOOM_CONFIG_FILE in init.el config.el packages.el; do
+  if [ ! -f "$DOOM_CONFIG_DIR/$DOOM_CONFIG_FILE" ]; then
+    echo "Missing Doom dotfile: $DOOM_CONFIG_DIR/$DOOM_CONFIG_FILE"
+    exit 1
+  fi
+done
+
+# Expose Doom in Terminal without replacing an unrelated existing command.
+DOOM_COMMAND="$(brew --prefix)/bin/doom"
+if [ -e "$DOOM_COMMAND" ] || [ -L "$DOOM_COMMAND" ]; then
+  if [ "$(readlink "$DOOM_COMMAND")" != "$DOOM_EMACS_DIR/bin/doom" ]; then
+    echo "Existing $DOOM_COMMAND points elsewhere; leaving it untouched."
+    exit 1
+  fi
+else
+  ln -s "$DOOM_EMACS_DIR/bin/doom" "$DOOM_COMMAND"
+fi
+
+# install is safe to rerun and preserves existing private configuration.
+# An explicit path also makes this work before a new shell is opened.
+export PATH="$(brew --prefix)/bin:/Applications/Emacs.app/Contents/MacOS:$PATH"
+"$DOOM_EMACS_DIR/bin/doom" install --force --no-config
+"$DOOM_EMACS_DIR/bin/doom" sync --env
+"$DOOM_EMACS_DIR/bin/doom" doctor
+echo "Doom Emacs is ready. Open Emacs from Applications or Spotlight."
+
 # --- Neovim alias ---
 # (Your dotfiles likely already handle this, but we'll make sure.)
 if ! grep -q 'alias vim="nvim"' ~/.zshrc 2>/dev/null; then
