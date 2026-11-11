@@ -100,3 +100,14 @@
 
 ;; Highlight Spawn source files with our local language mode.
 (load! "lisp/spawn-mode")
+
+;; Keep inferred types and parameter labels out of the source display.
+(after! eglot
+  (defun jam-disable-inlay-hints ()
+    (eglot-inlay-hints-mode -1))
+  (add-hook 'eglot-managed-mode-hook #'jam-disable-inlay-hints)
+  ;; Also update existing buffers when reloading this configuration.
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (bound-and-true-p eglot-inlay-hints-mode)
+        (eglot-inlay-hints-mode -1)))))
