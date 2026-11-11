@@ -152,7 +152,7 @@ echo "✅ Dotfiles installed successfully!"
 # Restore ~/.config/doom from dotfiles before installing Doom so its selected
 # modules, C++ tooling and font size are used from the first launch.
 echo "Installing Doom Emacs and development tools..."
-brew install coreutils findutils gnu-tar llvm shellcheck multimarkdown cmake libvterm
+brew install coreutils findutils gnu-tar llvm shellcheck multimarkdown cmake libvterm fileicon
 brew install --cask emacs-app font-symbols-only-nerd-font
 
 DOOM_EMACS_DIR="$HOME/.config/emacs"
@@ -194,6 +194,12 @@ export PATH="$(brew --prefix)/bin:/Applications/Emacs.app/Contents/MacOS:$PATH"
 "$DOOM_EMACS_DIR/bin/doom" install --force --no-config
 "$DOOM_EMACS_DIR/bin/doom" sync --env
 "$DOOM_EMACS_DIR/bin/doom" doctor
+# Use the custom Spawn Dock icon without modifying Emacs's signed resources.
+# Reapply after Homebrew upgrades Emacs. macOS may require App Management access.
+if ! fileicon set /Applications/Emacs.app "$DOOM_CONFIG_DIR/assets/spawn-icon.png"; then
+  echo "Could not apply the Spawn icon. Allow your terminal in System Settings > Privacy & Security > App Management, then rerun:"
+  echo 'fileicon set /Applications/Emacs.app "$HOME/.config/doom/assets/spawn-icon.png"'
+fi
 echo "Doom Emacs is ready. Open Emacs from Applications or Spotlight."
 
 # --- Neovim alias ---
