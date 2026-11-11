@@ -152,7 +152,7 @@ echo "✅ Dotfiles installed successfully!"
 # Restore ~/.config/doom from dotfiles before installing Doom so its selected
 # modules, C++ tooling and font size are used from the first launch.
 echo "Installing Doom Emacs and development tools..."
-brew install coreutils findutils gnu-tar llvm shellcheck multimarkdown
+brew install coreutils findutils gnu-tar llvm shellcheck multimarkdown cmake libvterm
 brew install --cask emacs-app font-symbols-only-nerd-font
 
 DOOM_EMACS_DIR="$HOME/.config/emacs"
