@@ -4,3 +4,5 @@
 
 -- Run the LÖVE project in the current working directory in a terminal split
 vim.keymap.set("n", "<leader>r", "<cmd>botright split | terminal love .<cr>", { desc = "Run LÖVE" })
+
+require("config.codex").setup()
