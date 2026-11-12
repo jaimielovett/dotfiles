@@ -3,6 +3,9 @@
 ;; Keep physical Left Control and AltGr outside interception for compatibility.
 (defcfg
   process-unmapped-keys (all-except lctl ralt)
+  ;; Kanata 1.11 honors this for the whole Windows key-state check.
+  ;; Pin 1.11: 1.12 runs part of that check anyway (upstream issue #2115).
+  windows-sync-keystates no
   log-layer-changes no
 )
 

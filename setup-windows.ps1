@@ -328,18 +328,49 @@ if (!$SkipCapsLock) {
     $kanataDir = Join-Path $programsDir 'Kanata'
     $kanataCli = Join-Path $kanataDir 'kanata-cli.exe'
     $kanataGui = Join-Path $kanataDir 'kanata.exe'
-    if (!(Test-ToolVersion $kanataCli '^kanata 1\.12\.0\b') -or !(Test-Path -LiteralPath $kanataGui)) {
-        $archive = Get-VerifiedArchive 'kanata-1.12.0-windows-x64.zip' `
-            'https://github.com/jtroo/kanata/releases/download/v1.12.0/windows-binaries-x64.zip' `
-            '13947ED78CFA3284BFEF854E3C542C74AB366236B72FD9F7E039F8638DEEAD9D'
-        $kanataExtractDir = Join-Path $cacheDir 'kanata-1.12.0'
+    # 1.12's key-state synchronization regresses UK-layout quote/backslash keys.
+    # https://github.com/jtroo/kanata/issues/2115
+    if (!(Test-ToolVersion $kanataCli '^kanata 1\.11\.0\b') -or !(Test-Path -LiteralPath $kanataGui)) {
+        $archive = Get-VerifiedArchive 'kanata-1.11.0-windows-x64.zip' `
+            'https://github.com/jtroo/kanata/releases/download/v1.11.0/windows-binaries-x64.zip' `
+            'DB43D06E7F8D0578BC77585BC24BB385CC99862E942E5554DBF3DEC02BF081E9'
+        $kanataExtractDir = Join-Path $cacheDir 'kanata-1.11.0'
         if (!(Test-Path -LiteralPath $kanataExtractDir)) { Expand-Archive -LiteralPath $archive -DestinationPath $kanataExtractDir }
+        $newCli = Join-Path $kanataExtractDir 'kanata_windows_tty_winIOv2_x64.exe'
+        $newGui = Join-Path $kanataExtractDir 'kanata_windows_gui_winIOv2_x64.exe'
+        Invoke-Checked $newCli @('--cfg', (Join-Path $repoDir '.config\kanata\kanata.kbd'), '--check', '--no-wait')
+        $previousBinaries = $null
+        $previousProcesses = @()
         if ((Test-Path -LiteralPath $kanataDir) -and @(Get-ChildItem -LiteralPath $kanataDir -Force).Count -gt 0) {
-            throw "Existing $kanataDir is not the expected version. Move it aside before rerunning."
+            if (!(Test-ToolVersion $kanataCli '^kanata 1\.12\.0\b')) {
+                throw "Existing $kanataDir is not a supported 1.11/1.12 installation. Move it aside before rerunning."
+            }
+            $previousBinaries = Join-Path $backupDir 'kanata-1.12.0'
+            New-Item -ItemType Directory -Path $previousBinaries -Force | Out-Null
+            foreach ($binary in @($kanataCli, $kanataGui)) {
+                if (Test-Path -LiteralPath $binary) { Copy-Item -LiteralPath $binary -Destination $previousBinaries }
+            }
+            Write-Host "Saved Kanata 1.12 binaries in $previousBinaries"
+            $previousProcesses = @(Get-CimInstance Win32_Process -Filter "Name = 'kanata.exe'" |
+                Where-Object { $_.ExecutablePath -eq $kanataGui })
+            foreach ($process in $previousProcesses) { Stop-Process -Id $process.ProcessId -ErrorAction Stop }
         }
-        New-Item -ItemType Directory -Path $kanataDir -Force | Out-Null
-        Copy-Item -LiteralPath (Join-Path $kanataExtractDir 'kanata_windows_tty_winIOv2_x64.exe') -Destination $kanataCli
-        Copy-Item -LiteralPath (Join-Path $kanataExtractDir 'kanata_windows_gui_winIOv2_x64.exe') -Destination $kanataGui
+        try {
+            New-Item -ItemType Directory -Path $kanataDir -Force | Out-Null
+            Copy-Item -LiteralPath $newCli -Destination $kanataCli -Force
+            Copy-Item -LiteralPath $newGui -Destination $kanataGui -Force
+        }
+        catch {
+            if ($previousBinaries) {
+                Get-ChildItem -LiteralPath $previousBinaries -File | Copy-Item -Destination $kanataDir -Force
+                if ($previousProcesses.Count -gt 0) {
+                    $oldConfig = Join-Path $configDir 'kanata\kanata.kbd'
+                    Start-Process -FilePath $kanataGui -ArgumentList ('--cfg "' + $oldConfig + '" --no-wait') `
+                        -WorkingDirectory (Split-Path $oldConfig) -WindowStyle Hidden
+                }
+            }
+            throw
+        }
     }
     # Validate the new config before replacing the active one.
     Invoke-Checked $kanataCli @('--cfg', (Join-Path $repoDir '.config\kanata\kanata.kbd'), '--check', '--no-wait')
