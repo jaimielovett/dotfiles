@@ -59,29 +59,9 @@ Differing launcher files and the copied Caps Lock config are backed up before re
 
 ## Editing and syncing Doom
 
-Use `SPC f p` in Doom to open your private config, or open `~/.config/doom/config.el`. Saving changes edits this checkout immediately. `M-x magit-status` from a config file can commit and push them. You can also use PowerShell:
+Use `SPC f p` in Doom to open your private config, or open `~/.config/doom/config.el`. Saving changes edits this checkout immediately. `M-x magit-status` from a config file can commit and push them.
 
-```powershell
-Set-Location "$env:USERPROFILE\dotfiles"
-git pull --ff-only                  # Before editing; commit your own changes first if necessary
-# Edit and save your Doom config in Emacs.
-git add .config/doom
-git commit -m "Update Doom config"
-git push
-```
-
-On the Mac's existing bare-repo setup:
-
-```sh
-cd ~
-config pull --ff-only
-# After editing on Mac:
-config add .config/doom
-config commit -m "Update Doom config"
-config push
-```
-
-Back on Windows, just `git pull --ff-only` from this checkout; the live config is already updated. Restart Emacs or reload the config after pulling `config.el` changes. Changes to `init.el` or `packages.el` still require `doom sync` and an Emacs restart on each machine; the Windows setup script is not needed. Doom's installation, package caches, and generated Windows launchers remain local to each machine.
+Follow the [Mac and Windows sync instructions](../README.md#syncing-doom-config-between-mac-and-windows) in the main README for the Git commands and when to run `doom sync`. Routine config syncing does not require rerunning the Windows setup script.
 
 ## Maintenance and removal
 
