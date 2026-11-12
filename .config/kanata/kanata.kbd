@@ -1,0 +1,13 @@
+;; Caps Lock: Escape on tap; Left Control on hold or with another key.
+;; Match the 500 ms tap window in the Karabiner dotfiles.
+;; Keep physical Left Control and AltGr outside interception for compatibility.
+(defcfg
+  process-unmapped-keys (all-except lctl ralt)
+  log-layer-changes no
+)
+
+(defsrc caps)
+
+(deflayer default
+  (tap-hold-press 500 500 esc lctl)
+)

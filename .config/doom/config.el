@@ -49,6 +49,12 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+;; The Windows launchers put Git Bash and GNU utilities on PATH.
+(when (eq system-type 'windows-nt)
+  (when-let* ((bash (executable-find "bash")))
+    (setq shell-file-name bash
+          shell-command-switch "-c")))
+
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
@@ -81,18 +87,23 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; Homebrew lives in different locations on Apple Silicon and Intel Macs.
+;; Prefer the launcher's LLVM tools on Windows; Homebrew on macOS.
 (defvar jam-llvm-bin
-  (expand-file-name "opt/llvm/bin"
+  (if (eq system-type 'windows-nt)
+      (or (when-let* ((clangd (executable-find "clangd")))
+            (file-name-directory clangd))
+          (expand-file-name "LLVM/bin" (or (getenv "ProgramFiles") "C:/Program Files")))
+    (expand-file-name "opt/llvm/bin"
                     (if (file-directory-p "/opt/homebrew")
-                        "/opt/homebrew" "/usr/local")))
+                        "/opt/homebrew" "/usr/local"))))
 (add-to-list 'exec-path jam-llvm-bin)
 (unless (member jam-llvm-bin (split-string (getenv "PATH") path-separator))
   (setenv "PATH" (concat jam-llvm-bin path-separator (getenv "PATH"))))
 (after! eglot
   (add-to-list 'eglot-server-programs
                `((c++-mode c-mode c++-ts-mode c-ts-mode)
-                 . (,(expand-file-name "clangd" jam-llvm-bin)
+                 . (,(expand-file-name (if (eq system-type 'windows-nt)
+                                          "clangd.exe" "clangd") jam-llvm-bin)
                     "--background-index" "--clang-tidy"))))
 
 ;; Start with larger text instead of zooming in each session.

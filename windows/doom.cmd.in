@@ -1,0 +1,9 @@
+@echo off
+setlocal
+set "HOME=%USERPROFILE%"
+set "DOOMDIR=%USERPROFILE%\.config\doom"
+set "EMACSDIR=%USERPROFILE%\.config\emacs"
+set "SHELL=@GIT_BASH@"
+set "PATH=%LOCALAPPDATA%\Programs\Emacs\bin;%EMACSDIR%\bin;@GIT_USR_BIN@;@GIT_BIN@;@LLVM_BIN@;@CMAKE_BIN@;%LOCALAPPDATA%\Programs\MultiMarkdown\bin;%LOCALAPPDATA%\Microsoft\WinGet\Links;%PATH%"
+"@GIT_BASH@" "%EMACSDIR:\=/%/bin/doom" %*
+exit /b %errorlevel%

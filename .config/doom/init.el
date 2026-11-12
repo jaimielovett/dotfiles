@@ -78,10 +78,10 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell            ; the elisp shell that works everywhere
+       (:if (eq system-type 'windows-nt) eshell) ; native Windows shell
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
-       vterm               ; almost the best terminal emulation in Emacs
+       (:if (not (eq system-type 'windows-nt)) vterm)
        ;;ghostel           ; the best terminal emulation in Emacs
 
        :checkers

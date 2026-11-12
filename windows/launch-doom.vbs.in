@@ -1,0 +1,11 @@
+Set shell = CreateObject("WScript.Shell")
+Set env = shell.Environment("PROCESS")
+profileDir = shell.ExpandEnvironmentStrings("%USERPROFILE%")
+localDir = shell.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+env("HOME") = profileDir
+env("DOOMDIR") = profileDir & "\.config\doom"
+env("EMACSDIR") = profileDir & "\.config\emacs"
+env("SHELL") = "@GIT_BASH@"
+env("PATH") = localDir & "\Programs\Emacs\bin;" & env("EMACSDIR") & "\bin;@GIT_USR_BIN@;@GIT_BIN@;@LLVM_BIN@;@CMAKE_BIN@;" & localDir & "\Programs\MultiMarkdown\bin;" & localDir & "\Microsoft\WinGet\Links;" & env("PATH")
+shell.CurrentDirectory = profileDir
+shell.Run """" & localDir & "\Programs\Emacs\bin\runemacs.exe"" --init-directory """ & env("EMACSDIR") & """", 1, False
