@@ -94,6 +94,53 @@ function Copy-ConfigFile {
     Copy-Item -LiteralPath $Source -Destination $Destination -Force
 }
 
+function Link-DoomConfig {
+    param([string] $Source, [string] $Destination)
+    $sourcePath = [IO.Path]::GetFullPath($Source).TrimEnd('\')
+    $destinationPath = [IO.Path]::GetFullPath($Destination).TrimEnd('\')
+    if ($sourcePath -eq $destinationPath) { return } # A home-directory bare-repo checkout.
+    if (!(Test-Path -LiteralPath (Join-Path $sourcePath 'init.el') -PathType Leaf)) {
+        throw "Doom config source is missing init.el: $sourcePath"
+    }
+    if ($sourcePath.StartsWith($destinationPath + '\', [StringComparison]::OrdinalIgnoreCase) -or
+        $destinationPath.StartsWith($sourcePath + '\', [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'The Doom config source and link cannot contain one another.'
+    }
+    $existing = Get-Item -LiteralPath $destinationPath -Force -ErrorAction SilentlyContinue
+    if ($existing -and ($existing.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        $target = @($existing.Target)[0]
+        if ($target -and [IO.Path]::GetFullPath($target).TrimEnd('\') -eq $sourcePath) { return }
+        throw "$destinationPath already links elsewhere ($target). Use the original checkout or move that link aside first."
+    }
+    if ($existing -and !$existing.PSIsContainer) { throw "Not a directory: $destinationPath" }
+
+    $savedConfig = $null
+    if ($existing) {
+        # Move only the expected live config directory into our backup folder.
+        $expectedConfig = [IO.Path]::GetFullPath((Join-Path $configDir 'doom')).TrimEnd('\')
+        $backupRoot = [IO.Path]::GetFullPath($backupDir).TrimEnd('\') + '\'
+        $savedConfig = [IO.Path]::GetFullPath((Join-Path $backupDir 'doom-config'))
+        if ($destinationPath -ne $expectedConfig -or
+            !$savedConfig.StartsWith($backupRoot, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'Refusing to move a config directory outside the expected migration paths.'
+        }
+        New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+        [IO.Directory]::Move($destinationPath, $savedConfig)
+        Write-Host "Saved the previous Doom config in $savedConfig. Compare it with the repo before discarding local edits."
+    }
+    try {
+        New-Item -ItemType Directory -Path (Split-Path $destinationPath) -Force | Out-Null
+        New-Item -ItemType Junction -Path $destinationPath -Target $sourcePath | Out-Null
+    }
+    catch {
+        if ($savedConfig -and !(Get-Item -LiteralPath $destinationPath -Force -ErrorAction SilentlyContinue)) {
+            [IO.Directory]::Move($savedConfig, $destinationPath)
+        }
+        throw
+    }
+    Write-Host "Linked $destinationPath to $sourcePath"
+}
+
 function Write-Launcher {
     param([string] $Template, [string] $Destination, [hashtable] $Values)
     $content = [IO.File]::ReadAllText($Template)
@@ -167,6 +214,7 @@ foreach ($relativePath in $requiredFiles) {
 Write-Host "User config: $configDir"
 Write-Host "Programs: $programsDir"
 Write-Host "Commands: $commandDir"
+if (!$SkipDoom) { Write-Host "Live Doom config will use: $(Join-Path $repoDir '.config\doom')" }
 if (!$PSCmdlet.ShouldProcess($profileDir, 'Set up native Doom Emacs and/or Caps Lock Escape/Control')) { return }
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
@@ -249,19 +297,19 @@ if (!$SkipDoom) {
         Invoke-Checked 'git.exe' @('-C', $doomCore, 'fetch', '--depth', '1', 'origin', $doomRevision)
         Invoke-Checked 'git.exe' @('-C', $doomCore, 'checkout', '-B', 'master', $doomRevision)
     }
-    foreach ($relativePath in $requiredFiles | Where-Object { $_ -like '.config\doom\*' }) {
-        Copy-ConfigFile (Join-Path $repoDir $relativePath) (Join-Path $profileDir $relativePath)
-    }
+    $doomConfigSource = Join-Path $repoDir '.config\doom'
+    Link-DoomConfig $doomConfigSource (Join-Path $configDir 'doom')
     $values = @{
         GIT_BASH = Join-Path $gitRoot 'bin\bash.exe'
         GIT_BIN = Join-Path $gitRoot 'bin'
         GIT_USR_BIN = Join-Path $gitRoot 'usr\bin'
         LLVM_BIN = $llvmBin
         CMAKE_BIN = $cmakeBin
+        DOOM_DIR = $doomConfigSource
     }
     Write-Launcher (Join-Path $repoDir 'windows\doom.cmd.in') (Join-Path $commandDir 'doom.cmd') $values
     Write-Launcher (Join-Path $repoDir 'windows\emacs.cmd.in') (Join-Path $commandDir 'emacs.cmd') $values
-    $guiLauncher = Join-Path $configDir 'doom\windows\launch-doom.vbs'
+    $guiLauncher = Join-Path $localDir 'dotfiles-windows\launchers\launch-doom.vbs'
     Write-Launcher (Join-Path $repoDir 'windows\launch-doom.vbs.in') $guiLauncher $values
     $userPath = [string] [Environment]::GetEnvironmentVariable('Path', 'User')
     if (@($userPath -split ';' | Where-Object { $_.TrimEnd('\') -eq $commandDir }).Count -eq 0) {

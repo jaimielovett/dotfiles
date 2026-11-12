@@ -1,1 +1,8 @@
 .cfg
+
+# Local launchers from older Windows setups and Emacs-generated config files.
+/.config/doom/windows/
+/.config/doom/**/*.elc
+/.config/doom/**/*~
+/.config/doom/**/.#*
+/.config/doom/**/#*#

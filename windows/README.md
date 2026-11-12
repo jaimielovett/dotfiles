@@ -1,6 +1,6 @@
 # Windows setup
 
-Installs native Doom Emacs with the shared `.config/doom` files and sets Caps Lock to Escape on tap / Control on hold. No WSL or keyboard driver is needed.
+Installs native Doom Emacs using the repo's `.config/doom` files directly and sets Caps Lock to Escape on tap / Control on hold. No WSL or keyboard driver is needed.
 
 ## Install
 
@@ -19,6 +19,8 @@ The execution-policy flag applies only to that PowerShell process. Git for Windo
 
 Open **Doom Emacs** in the Start menu. In a new terminal, `emacs` opens it and `doom sync` synchronizes packages after editing `init.el` or `packages.el`.
 
+Keep this checkout in a permanent location: setup links `%USERPROFILE%\.config\doom` to its `.config\doom` directory using a Windows directory junction, and points Doom directly at that repo path. Editing the normal Doom config in Emacs therefore edits the tracked files. A junction does not require Developer Mode or an administrator terminal. Keep the checkout in place after installation.
+
 The first Doom installation can take 10-20 minutes. New Doom checkouts start at tested revision `7ccac7f643ad67baa25b216717cf8617a0903c69`; an existing Doom checkout is reused without upgrading it. Downloaded archives are pinned and checked against SHA-256 hashes; the WinGet tools use WinGet's package checksums.
 
 ## What it installs
@@ -36,21 +38,50 @@ Caps Lock taps under 500 ms send Escape. Holding it past 500 ms, or pressing ano
 | Item | Location |
 | --- | --- |
 | Doom core | `%USERPROFILE%\.config\emacs` |
-| Doom config | `%USERPROFILE%\.config\doom` |
+| Doom config | `.config\doom` in this checkout, also accessible through `%USERPROFILE%\.config\doom` |
+| Generated GUI launcher | `%LOCALAPPDATA%\dotfiles-windows\launchers` |
 | Emacs and portable tools | `%LOCALAPPDATA%\Programs` |
 | Terminal commands | `%USERPROFILE%\.local\bin` (added to user PATH) |
 | Caps Lock config | `%USERPROFILE%\.config\kanata\kanata.kbd` |
 | Caps Lock auto-start | Current user's Startup folder |
 | Downloads and config backups | `%LOCALAPPDATA%\dotfiles-windows` |
 
-Rerun the same script after pulling dotfile changes. Differing destination config files and launchers are backed up before replacement. Existing unrelated configuration files are left in place. If a target program folder contains a different version, setup stops rather than overwriting it. Existing unrelated Emacs configurations are not moved; the launchers explicitly select Doom's init directory. `HOME` and tool-specific paths are set only inside the launchers.
+The setup script is for installing or repairing Windows integration, not routine Doom config syncing. Run it from the same permanent checkout if needed. It reuses an existing correct junction; a link to another checkout is left untouched with an explanatory error. If an older copied Doom config directory exists, the whole directory is moved to the timestamped backup folder before creating the junction. Check that backup for local changes you want to merge into the repo. Generated launchers stay outside the shared config.
+
+Differing launcher files and the copied Caps Lock config are backed up before replacement. Existing unrelated configuration files are left in place. If a target program folder contains a different version, setup stops rather than overwriting it. Existing unrelated Emacs configurations are not moved; the launchers explicitly select Doom's init directory. `HOME` and tool-specific paths are set only inside the launchers.
 
 ```powershell
 .\setup-windows.ps1 -WhatIf          # Preview paths and actions without changes/downloads
 .\setup-windows.ps1 -SkipCapsLock    # Only set up Doom
 .\setup-windows.ps1 -SkipDoom        # Only set up Caps Lock
-.\setup-windows.ps1 -SkipSync        # Copy/configure Doom without running its package sync
+.\setup-windows.ps1 -SkipSync        # Link/configure Doom without running its package sync
 ```
+
+## Editing and syncing Doom
+
+Use `SPC f p` in Doom to open your private config, or open `~/.config/doom/config.el`. Saving changes edits this checkout immediately. `M-x magit-status` from a config file can commit and push them. You can also use PowerShell:
+
+```powershell
+Set-Location "$env:USERPROFILE\dotfiles"
+git pull --ff-only                  # Before editing; commit your own changes first if necessary
+# Edit and save your Doom config in Emacs.
+git add .config/doom
+git commit -m "Update Doom config"
+git push
+```
+
+On the Mac's existing bare-repo setup:
+
+```sh
+cd ~
+config pull --ff-only
+# After editing on Mac:
+config add .config/doom
+config commit -m "Update Doom config"
+config push
+```
+
+Back on Windows, just `git pull --ff-only` from this checkout; the live config is already updated. Restart Emacs or reload the config after pulling `config.el` changes. Changes to `init.el` or `packages.el` still require `doom sync` and an Emacs restart on each machine; the Windows setup script is not needed. Doom's installation, package caches, and generated Windows launchers remain local to each machine.
 
 ## Maintenance and removal
 
