@@ -2,6 +2,8 @@
 
 Installs native Doom Emacs using the repo's `.config/doom` files directly and sets Caps Lock to Escape on tap / Control on hold. No WSL or keyboard driver is needed.
 
+For Chrome, VS Code, JaimieOS, and Doom Emacs switch-and-return keybindings, see the [Windows app shortcuts reference](SHORTCUTS.md). Install or update them separately with `setup-shortcuts.ps1` from the repo root.
+
 ## Install
 
 Use Windows 10 or 11 on an x64 PC with [WinGet](https://learn.microsoft.com/windows/package-manager/winget/). In PowerShell:
