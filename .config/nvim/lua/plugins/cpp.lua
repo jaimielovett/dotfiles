@@ -1,5 +1,20 @@
 return {
   {
+    "nvim-mini/mini.pairs",
+    config = function(_, opts)
+      LazyVim.mini.pairs(opts)
+      local pairs = require("mini.pairs")
+      local newline = pairs.cr
+      pairs.cr = function(key)
+        if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
+          -- Keep automatic closing braces, but Enter inserts only one newline.
+          return key or vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+        end
+        return newline(key)
+      end
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {

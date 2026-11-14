@@ -7,6 +7,22 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- Remove only blank/whitespace-only lines before the first content on save.
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("trim_leading_blank_lines", { clear = true }),
+  callback = function(args)
+    if vim.bo[args.buf].buftype ~= "" or not vim.bo[args.buf].modifiable then
+      return
+    end
+    vim.api.nvim_buf_call(args.buf, function()
+      local first = vim.fn.nextnonblank(1)
+      if first ~= 1 then
+        vim.api.nvim_buf_set_lines(args.buf, 0, first == 0 and -1 or first - 1, false, {})
+      end
+    end)
+  end,
+})
+
 -- Scroll the Claude Code window with Ctrl+u / Ctrl+d. Claude draws its own
 -- full-screen UI, so send it Page Up / Page Down instead of scrolling the buffer.
 vim.api.nvim_create_autocmd("TermOpen", {
