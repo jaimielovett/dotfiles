@@ -112,6 +112,9 @@
 ;; Highlight Spawn source files with our local language mode.
 (load! "lisp/spawn-mode")
 
+;; Plain C/C++ Enter behavior and removal of leading blank lines on save.
+(load! "lisp/editing")
+
 ;; Keep inferred types and parameter labels out of the source display.
 (after! eglot
   (defun jam-disable-inlay-hints ()
