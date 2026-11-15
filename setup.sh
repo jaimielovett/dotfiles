@@ -34,6 +34,9 @@ killall Finder SystemUIServer || true
 # --- Essential CLI tools ---
 brew install git wget tree zsh tmux neovim ripgrep fd node
 
+# --- Codex CLI ---
+brew install --cask codex
+
 # --- GUI Apps via Homebrew Cask ---
 brew install --cask ghostty
 brew install --cask google-chrome
