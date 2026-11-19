@@ -5,9 +5,8 @@
 -- Run the LÖVE project in the current working directory in a terminal split
 vim.keymap.set("n", "<leader>r", "<cmd>botright split | terminal love .<cr>", { desc = "Run LÖVE" })
 
-vim.keymap.set({ "n", "i", "t" }, "<F7>", function()
-  local terminal = vim.b.snacks_terminal
-  Snacks.terminal.toggle(nil, { cwd = terminal and terminal.cwd or LazyVim.root() })
-end, { desc = "Toggle project terminal" })
+local project_terminal = require("config.project_terminal")
+vim.keymap.set({ "n", "i", "t" }, "<F7>", project_terminal.toggle, { desc = "Toggle project terminal" })
+vim.keymap.set({ "n", "i", "t" }, "<F5>", project_terminal.run_spawn, { desc = "Build and run Spawn project" })
 
 require("config.codex").setup()

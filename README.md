@@ -7,6 +7,10 @@
 - Windows 10/11 (x64): see [Windows setup](windows/README.md) for native Doom Emacs and Caps Lock as Escape/Control.
 - Windows app shortcuts: see the [shortcut reference](windows/SHORTCUTS.md) for Shift + Alt + C/V/X/E and switching back to your previous window. Install with `setup-shortcuts.ps1`.
 
+## Running a Spawn project in Neovim
+
+Open a file in a project with a `main.spawn` entry point and press **F5**. Neovim saves modified Spawn buffers belonging to that project and runs `spawn .` in the **F7** project terminal. A successful build launches the program from its project directory. Build errors and program output stay in the terminal. Press **F7** to hide or reopen it. If the program is still running, quit it or use **Ctrl+C** to return to the shell prompt before the next build. The shortcut works in Normal, Insert and Terminal modes on Windows and macOS.
+
 ## Syncing Doom config between Mac and Windows
 
 Both machines use the same tracked `.config/doom` files. On the Mac, the `config` alias manages the bare dotfiles repo with your home folder as its working tree. On Windows, `~/.config/doom` links to the permanent `~/dotfiles/.config/doom` checkout, so saving config changes in Emacs edits the Git-tracked files directly.
