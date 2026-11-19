@@ -4,7 +4,25 @@ Installs native Doom Emacs using the repo's `.config/doom` files directly and se
 
 For Chrome, VS Code, JaimieOS, and Doom Emacs switch-and-return keybindings, see the [Windows app shortcuts reference](SHORTCUTS.md). Install or update them separately with `setup-shortcuts.ps1` from the repo root.
 
-## Install
+## Neovim and Windows Terminal
+
+On Windows 10/11 x64, open 64-bit PowerShell under your normal account. You need WinGet and Git. If Git is missing, run `winget install --id Git.Git --exact --source winget` and reopen PowerShell. For a new machine:
+
+```powershell
+git clone https://github.com/jaimielovett/dotfiles.git "$env:USERPROFILE\dotfiles"
+Set-Location "$env:USERPROFILE\dotfiles"
+powershell -NoProfile -ExecutionPolicy Bypass -File .\setup-neovim.ps1
+```
+
+If you already have this checkout, run `git pull --ff-only` there and run the last command. The installer reuses tools already present, restores the repo's plugin revisions and waits for the configured language servers, formatters and Tree-sitter parsers. First setup needs internet access. LLVM and the Visual C++ build tools with the Windows SDK can take several GB and prompt for administrator access.
+
+Open a fresh **Windows Terminal** with **Win + R**, `wt`, **Enter**. In your project folder, run `vim .` to open the project, or `vim main.cpp` to edit a file. The `vim.cmd` launcher forwards arguments to Neovim in PowerShell and Command Prompt. In Neovim, press **Esc**, then **Space**, **f**, **t** to open a project terminal. Use `:checkhealth lazyvim` to check dependencies.
+
+- **Editor** — the default `%LOCALAPPDATA%\nvim` directory links to the checkout's `.config\nvim`. Keep the checkout in place. If you already have a different config, move it aside and rerun setup. Plugins and downloaded tools live in Neovim's data directory. Git, Node.js, LLVM, Tree-sitter CLI, ripgrep, fd, fzf, LazyGit, Codex CLI and LÖVE support the shared config and its keybindings. Sign in separately for Copilot or Codex if you use them.
+- **Terminal** — setup reads the font, size, opacity and theme colors from `.config\ghostty` and applies them to Windows Terminal's profile defaults. The current config uses JetBrainsMono Nerd Font (registered as `JetBrainsMono NF`), 18 pt, Catppuccin Mocha and 95% opacity. Windows acrylic provides blur. Explicit per-profile overrides take precedence. Setup saves a backup beside an existing `settings.json` before changing it.
+- **Reruns** — pull updates into the same checkout. Neovim reads config edits directly. Rerun the installer to reapply a changed Ghostty appearance or restore the locked plugin versions. Use `.\setup-neovim.ps1 -WhatIf` to preview the setup.
+
+## Install Doom Emacs and Caps Lock
 
 Use Windows 10 or 11 on an x64 PC with [WinGet](https://learn.microsoft.com/windows/package-manager/winget/). In PowerShell:
 
