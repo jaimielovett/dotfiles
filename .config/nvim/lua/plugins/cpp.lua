@@ -1,20 +1,34 @@
+local clangd = "clangd"
+local clang_format = "clang-format"
+local clangd_args = {
+  "--background-index",
+  "--clang-tidy",
+  "--completion-style=detailed",
+  "--header-insertion=iwyu",
+  "--function-arg-placeholders=1",
+}
+
+if vim.fn.has("macunix") == 1 then
+  local prefix = vim.env.HOMEBREW_PREFIX or (jit.arch == "arm64" and "/opt/homebrew" or "/usr/local")
+  local llvm_bin = prefix .. "/opt/llvm/bin/"
+  if vim.fn.executable(llvm_bin .. "clangd") == 1 then
+    clangd = llvm_bin .. "clangd"
+  end
+  if vim.fn.executable(llvm_bin .. "clang-format") == 1 then
+    clang_format = llvm_bin .. "clang-format"
+  end
+  table.insert(clangd_args, "--query-driver=/usr/bin/c++,/usr/bin/clang++," .. llvm_bin .. "clang++")
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         clangd = {
-          -- Reuse Homebrew LLVM rather than installing another copy with Mason.
+          -- Use the system LLVM toolchain.
           mason = false,
-          cmd = {
-            "/opt/homebrew/opt/llvm/bin/clangd",
-            "--background-index",
-            "--clang-tidy",
-            "--completion-style=detailed",
-            "--header-insertion=iwyu",
-            "--function-arg-placeholders",
-            "--query-driver=/usr/bin/c++,/usr/bin/clang++,/opt/homebrew/opt/llvm/bin/clang++",
-          },
+          cmd = vim.list_extend({ clangd }, clangd_args),
         },
       },
     },
@@ -23,7 +37,7 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = { c = { "clang_format" }, cpp = { "clang_format" } },
-      formatters = { clang_format = { command = "/opt/homebrew/opt/llvm/bin/clang-format" } },
+      formatters = { clang_format = { command = clang_format } },
     },
   },
   {
